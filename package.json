@@ -29,8 +29,7 @@
     "prepublishOnly": "bun run typecheck && bun test && bun run build"
   },
   "files": [
-    "dist",
-    "bin"
+    "dist"
   ],
   "keywords": [
     "browser",

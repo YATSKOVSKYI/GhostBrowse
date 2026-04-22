@@ -10,10 +10,11 @@ import { CurlAdapter, detectCurlImpersonate } from './adapters/curl.js';
 import type { GhostOptions, GhostResponse } from './types.js';
 
 const INSTALL_HINT =
-  'Install curl-impersonate and add it to PATH:\n' +
-  '  Windows : https://github.com/depler/curl-impersonate-win\n' +
-  '  Linux   : https://github.com/lwthiker/curl-impersonate\n' +
-  '  macOS   : https://github.com/lwthiker/curl-impersonate';
+  'Install curl-impersonate separately and add it to PATH, or set:\n' +
+  '  GHOSTBROWSE_CURL_IMPERSONATE=/absolute/path/to/curl-impersonate-binary\n\n' +
+  'Install references:\n' +
+  '  Linux/macOS: https://github.com/lwthiker/curl-impersonate\n' +
+  '  Windows    : https://github.com/depler/curl-impersonate-win';
 
 /**
  * Primary factory. Uses curl-impersonate for Chrome-identical TLS fingerprint.

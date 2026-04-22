@@ -9,7 +9,7 @@ Lightweight browser-impersonating HTTP client for Bun and Node.js.
 GhostBrowse is built for scraping pages that expose useful HTML, SSR JSON, or
 internal JSON APIs without launching a full browser. It sends Chrome-like
 navigation headers, keeps cookies between requests, follows redirects, and can
-use the bundled `curl-impersonate-chrome.exe` on Windows for Chrome-like TLS
+use an externally installed `curl-impersonate` binary for Chrome-like TLS
 handshakes on bodyless navigation requests.
 
 It is not a JavaScript-rendering browser. If a site requires DOM execution,
@@ -25,6 +25,35 @@ or:
 
 ```sh
 npm install ghost-browse
+```
+
+GhostBrowse does not bundle browser binaries or `curl-impersonate`. The core
+package stays lightweight and dependency-free; TLS impersonation is enabled when
+an external `curl-impersonate` binary is available.
+
+Optional TLS impersonation install:
+
+```sh
+# Linux / macOS
+# Install curl-impersonate using your system package manager, Docker image,
+# or the official project build instructions:
+# https://github.com/lwthiker/curl-impersonate
+
+# Windows
+# Install a Windows curl-impersonate build and add it to PATH:
+# https://github.com/depler/curl-impersonate-win
+```
+
+If the binary is not on `PATH`, point GhostBrowse at it explicitly:
+
+```sh
+GHOSTBROWSE_CURL_IMPERSONATE=/absolute/path/to/curl_chrome116
+```
+
+PowerShell:
+
+```powershell
+$env:GHOSTBROWSE_CURL_IMPERSONATE = 'C:\tools\curl-impersonate\curl-impersonate-chrome.exe'
 ```
 
 ## Usage
@@ -62,13 +91,15 @@ console.log(await response.json());
 
 ## Transport Notes
 
-- `createBrowser()` prefers the bundled Windows
-  `bin/curl-impersonate-chrome.exe`, then falls back to compatible binaries in
-  `PATH`.
-- The bundled Windows binary supports method, headers, and URL only. It does
-  not support request bodies.
-- To avoid silently sending `Content-Length: 0`, GhostBrowse routes payload
-  requests through the native adapter while keeping the same public browser API.
+- `createBrowser()` uses `GHOSTBROWSE_CURL_IMPERSONATE` first, then compatible
+  binaries in `PATH` such as `curl_chrome116`, `curl-impersonate-chrome`, or
+  `curl-chrome`.
+- GhostBrowse intentionally does not ship platform binaries in the npm package.
+  This keeps installs small and lets Linux, macOS, Windows, Docker, and CI
+  environments choose the right `curl-impersonate` build.
+- CLI builds differ in POST body support. To avoid silently sending malformed
+  bodies, GhostBrowse routes payload requests through the native adapter while
+  keeping the same public browser API.
 - `createBrowserNative()` uses the runtime's native `fetch` transport.
 
 ## API
