@@ -102,6 +102,40 @@ console.log(await response.json());
   keeping the same public browser API.
 - `createBrowserNative()` uses the runtime's native `fetch` transport.
 
+## Troubleshooting
+
+### `curl-impersonate not found in PATH`
+
+`createBrowser()` requires an external `curl-impersonate` binary. Install a
+platform build, then either add it to `PATH` or point GhostBrowse at the binary:
+
+```sh
+GHOSTBROWSE_CURL_IMPERSONATE=/absolute/path/to/curl_chrome116
+```
+
+PowerShell:
+
+```powershell
+$env:GHOSTBROWSE_CURL_IMPERSONATE = 'C:\tools\curl-impersonate\curl-impersonate-chrome.exe'
+```
+
+Verify detection:
+
+```ts
+import { detectCurlImpersonate } from 'ghost-browse';
+
+console.log(await detectCurlImpersonate());
+```
+
+If TLS impersonation is not needed for a target site, use the zero-binary
+native transport:
+
+```ts
+import { createBrowserNative } from 'ghost-browse';
+
+const browser = createBrowserNative();
+```
+
 ## API
 
 ```ts
