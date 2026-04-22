@@ -162,7 +162,7 @@ browser.adapterName
 ```sh
 bun install
 bun run typecheck
-bun test
+bun run test:unit
 bun run build
 npm pack --dry-run
 ```
@@ -170,7 +170,14 @@ npm pack --dry-run
 The default test suite includes:
 
 - a local HTTP server smoke suite for deterministic client behavior;
-- a public Books to Scrape demo scrape that writes JSON and HTML artifacts.
+- a public Books to Scrape benchmark that writes JSON and HTML artifacts.
+
+The publish path runs only deterministic checks. Run the live benchmark
+explicitly when you want fresh public demo metrics:
+
+```sh
+bun run benchmark:books
+```
 
 After `bun test`, inspect:
 

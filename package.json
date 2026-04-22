@@ -21,12 +21,14 @@
     "build:cjs": "bun build src/index.ts --outdir dist-cjs --target node --format cjs --sourcemap && bun -e \"import { renameSync, rmSync } from 'node:fs'; renameSync('dist-cjs/index.js', 'dist/index.cjs'); renameSync('dist-cjs/index.js.map', 'dist/index.cjs.map'); rmSync('dist-cjs', { recursive: true, force: true })\"",
     "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "typecheck": "tsc --noEmit",
-    "test": "bun test",
+    "test": "bun run test:unit",
     "test:unit": "bun test test/smoke.test.ts",
+    "test:all": "bun test",
     "test:books": "bun test test/books-to-scrape.test.ts",
+    "benchmark:books": "bun test test/books-to-scrape.test.ts",
     "pack:dry": "npm pack --dry-run",
     "prepack": "bun run build",
-    "prepublishOnly": "bun run typecheck && bun test && bun run build"
+    "prepublishOnly": "bun run typecheck && bun run test:unit && bun run build"
   },
   "files": [
     "dist"
