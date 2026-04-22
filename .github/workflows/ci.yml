@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright Chromium (Linux)
+        if: runner.os == 'Linux'
+        run: bunx playwright install --with-deps chromium
+
+      - name: Install Playwright Chromium (Windows)
+        if: runner.os == 'Windows'
+        run: bunx playwright install chromium
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun test
+
+      - name: Upload scrape artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: books-to-scrape-${{ matrix.os }}
+          path: test-output/
+          if-no-files-found: ignore
+
+      - name: Build
+        run: bun run build
+
+      - name: Pack dry run
+        run: npm pack --dry-run
+
+      - name: Verify package imports
+        shell: pwsh
+        run: |
+          node -e "const pkg=require('./dist/index.cjs'); console.log(typeof pkg.createBrowserNative)"
+          bun -e "import { createBrowserNative } from './dist/index.js'; console.log(createBrowserNative().adapterName)"

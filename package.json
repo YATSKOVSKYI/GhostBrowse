@@ -1,0 +1,55 @@
+{
+  "name": "ghost-browse",
+  "version": "0.1.0",
+  "description": "Lightweight browser-impersonating HTTP client for Bun and Node.js",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "bun": "./dist/index.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "clean": "bun -e \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true })\"",
+    "build": "bun run clean && bun run build:esm && bun run build:cjs && bun run build:types",
+    "build:esm": "bun build src/index.ts --outdir dist --target node --format esm --sourcemap",
+    "build:cjs": "bun build src/index.ts --outdir dist-cjs --target node --format cjs --sourcemap && bun -e \"import { renameSync, rmSync } from 'node:fs'; renameSync('dist-cjs/index.js', 'dist/index.cjs'); renameSync('dist-cjs/index.js.map', 'dist/index.cjs.map'); rmSync('dist-cjs', { recursive: true, force: true })\"",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "test:unit": "bun test test/smoke.test.ts",
+    "test:books": "bun test test/books-to-scrape.test.ts",
+    "pack:dry": "npm pack --dry-run",
+    "prepack": "bun run build",
+    "prepublishOnly": "bun run typecheck && bun test && bun run build"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "keywords": [
+    "browser",
+    "scraping",
+    "chrome",
+    "http",
+    "fingerprint",
+    "fetch",
+    "curl-impersonate"
+  ],
+  "license": "MIT",
+  "engines": {
+    "bun": ">=1.0.0",
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "impit": "^0.13.1",
+    "playwright": "^1.59.1",
+    "typescript": "^5.4.0"
+  }
+}
