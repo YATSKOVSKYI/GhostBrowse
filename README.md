@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/OWNER/REPO/main/docs/assets/ghostbrowse-hero.png" alt="GhostBrowse browserless parsing library banner" width="100%" />
+  <img src="https://raw.githubusercontent.com/YATSKOVSKYI/GhostBrowse/main/docs/assets/ghostbrowse-hero.png" alt="GhostBrowse browserless parsing library banner" width="100%" />
 </p>
 
 # GhostBrowse
@@ -121,7 +121,7 @@ a public sandbox that explicitly says "We love being scraped!" and is intended
 for scraping practice.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/OWNER/REPO/main/docs/assets/benchmark-chart.png" alt="Benchmark chart comparing GhostBrowse, Impit, and Playwright Chromium" width="100%" />
+  <img src="https://raw.githubusercontent.com/YATSKOVSKYI/GhostBrowse/main/docs/assets/benchmark-chart.png" alt="Benchmark chart comparing GhostBrowse, Impit, and Playwright Chromium" width="100%" />
 </p>
 
 **Figure 1.** End-to-end scraping performance on a fixed 50-page workload.
