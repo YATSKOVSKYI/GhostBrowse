@@ -18,13 +18,13 @@ canvas/WebGL fingerprinting, clicks, or scroll events, use Playwright.
 ## Install
 
 ```sh
-bun add ghostbrowse
+bun add ghost-browse
 ```
 
 or:
 
 ```sh
-npm install ghostbrowse
+npm install ghost-browse
 ```
 
 GhostBrowse does not bundle browser binaries or `curl-impersonate`. The core
@@ -59,7 +59,7 @@ $env:GHOSTBROWSE_CURL_IMPERSONATE = 'C:\tools\curl-impersonate\curl-impersonate-
 ## Usage
 
 ```ts
-import { createBrowser } from 'ghostbrowse';
+import { createBrowser } from 'ghost-browse';
 
 const browser = await createBrowser();
 const response = await browser.get('https://example.com');
@@ -71,7 +71,7 @@ console.log(await response.text());
 Native fallback without `curl-impersonate`:
 
 ```ts
-import { createBrowserNative } from 'ghostbrowse';
+import { createBrowserNative } from 'ghost-browse';
 
 const browser = createBrowserNative();
 const response = await browser.get('https://example.com');
@@ -141,7 +141,7 @@ $env:GHOSTBROWSE_CURL_IMPERSONATE = 'C:\tools\curl-impersonate\curl-impersonate-
 Verify detection:
 
 ```ts
-import { detectCurlImpersonate } from 'ghostbrowse';
+import { detectCurlImpersonate } from 'ghost-browse';
 
 console.log(await detectCurlImpersonate());
 ```
@@ -150,7 +150,7 @@ If TLS impersonation is not needed for a target site, use the zero-binary
 native transport:
 
 ```ts
-import { createBrowserNative } from 'ghostbrowse';
+import { createBrowserNative } from 'ghost-browse';
 
 const browser = createBrowserNative();
 ```
