@@ -28,7 +28,7 @@
     "build": "bun run clean && bun run build:esm && bun run build:cjs && bun run build:types",
     "build:esm": "bun build src/index.ts --outdir dist --target node --format esm",
     "build:cjs": "bun build src/index.ts --outdir dist-cjs --target node --format cjs && bun -e \"import { renameSync, rmSync } from 'node:fs'; renameSync('dist-cjs/index.js', 'dist/index.cjs'); rmSync('dist-cjs', { recursive: true, force: true })\"",
-    "build:types": "tsc --emitDeclarationOnly --outDir dist",
+    "build:types": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "bun run test:unit",
     "test:unit": "bun test test/smoke.test.ts test/dns.test.ts",

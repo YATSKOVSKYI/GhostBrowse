@@ -15,6 +15,7 @@
  */
 
 import { spawn } from 'node:child_process';
+import { Buffer } from 'node:buffer';
 import type { Adapter, AdapterResponse } from './types.js';
 import { NativeAdapter } from './native.js';
 import { DnsController } from '../dns.js';
@@ -160,7 +161,7 @@ function runProcess(binary: string, args: string[], timeoutMs: number): Promise<
       else reject(new Error('GhostBrowse/curl: binary produced no output'));
     });
 
-    proc.on('error', err => {
+    proc.on('error', (err: Error) => {
       clearTimeout(timer);
       reject(err);
     });
