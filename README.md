@@ -102,6 +102,73 @@ console.log(await response.json());
   keeping the same public browser API.
 - `createBrowserNative()` uses the runtime's native `fetch` transport.
 
+## Custom DNS
+
+Custom DNS is a curl-adapter transport option. It lets GhostBrowse resolve a
+hostname through user-selected DNS servers and pass the resolved edge IP to curl
+with `--resolve`. This is useful for choosing a DNS view for a region, CDN, or
+target site without adding a proxy or a full browser.
+
+DNS does not change your outgoing IP address. The target site still sees the IP
+of your machine, server, VPN, or proxy. DNS only affects which CDN or origin IP
+the request connects to.
+
+```ts
+import { createBrowser } from 'ghost-browse';
+
+const browser = await createBrowser({
+  dns: {
+    servers: ['223.5.5.5', '119.29.29.29'],
+    strategy: 'rotate',
+    ttlMs: 60_000,
+    mode: 'auto',
+  },
+});
+
+const page = await browser.get('https://example.com');
+```
+
+Cloudflare / Google DNS:
+
+```ts
+const browser = await createBrowser({
+  dns: {
+    servers: ['1.1.1.1', '8.8.8.8'],
+    strategy: 'first',
+  },
+});
+```
+
+Strict mode without system DNS fallback:
+
+```ts
+const browser = await createBrowser({
+  dns: {
+    servers: ['223.5.5.5'],
+    fallbackToSystem: false,
+  },
+});
+```
+
+Options:
+
+| Option | Default | Notes |
+| --- | --- | --- |
+| `servers` | required | IPv4/IPv6 DNS servers, optionally with port, for example `1.1.1.1` or `1.1.1.1:53` |
+| `strategy` | `first` | `first`, `rotate`, or `random` DNS server order |
+| `ttlMs` | `60000` | Lazy in-memory DNS cache TTL |
+| `ipv6` | `false` | Also resolve AAAA records when enabled |
+| `mode` | `auto` | `auto` and `resolve` use `dns.Resolver + curl --resolve`; `curl-dns-servers` emits curl `--dns-servers` |
+| `fallbackToSystem` | `true` | Try system DNS if custom DNS fails |
+
+The DNS cache is bounded and cleaned lazily during requests; GhostBrowse does
+not start background DNS workers or timers.
+
+`createBrowserNative({ dns })` does not fail, but native `fetch` cannot
+guarantee per-request DNS in Node/Bun, so GhostBrowse logs a warning and ignores
+that option. Payload requests in the curl adapter still use the existing native
+fallback to preserve request-body semantics across curl builds.
+
 ## Security Notes
 
 GhostBrowse is an HTTP client, so network access is intentional and required.

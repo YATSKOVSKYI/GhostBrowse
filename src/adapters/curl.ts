@@ -17,6 +17,8 @@
 import { spawn } from 'node:child_process';
 import type { Adapter, AdapterResponse } from './types.js';
 import { NativeAdapter } from './native.js';
+import { DnsController } from '../dns.js';
+import type { GhostBrowseDnsOptions } from '../types.js';
 
 const PATH_CANDIDATES = [
   'curl_chrome116',
@@ -167,8 +169,11 @@ function runProcess(binary: string, args: string[], timeoutMs: number): Promise<
 
 export class CurlAdapter implements Adapter {
   private readonly payloadFallback = new NativeAdapter();
+  private readonly dns?: DnsController;
 
-  constructor(private readonly binary: string) {}
+  constructor(private readonly binary: string, dns?: GhostBrowseDnsOptions) {
+    this.dns = dns ? new DnsController(dns) : undefined;
+  }
 
   async request(
     url: string,
@@ -193,6 +198,10 @@ export class CurlAdapter implements Adapter {
 
     for (const [key, value] of Object.entries(headers)) {
       args.push('-H', `${key}: ${value}`);
+    }
+
+    if (this.dns) {
+      args.push(...await this.dns.curlArgsForUrl(url));
     }
 
     args.push(url);

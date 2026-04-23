@@ -2,7 +2,14 @@ export { GhostBrowser } from './browser.js';
 export { NativeAdapter } from './adapters/native.js';
 export { CurlAdapter, detectCurlImpersonate } from './adapters/curl.js';
 export type { Adapter, AdapterResponse } from './adapters/types.js';
-export type { GhostOptions, GhostResponse, RequestOptions, Cookie } from './types.js';
+export type {
+  Cookie,
+  DnsStrategy,
+  GhostBrowseDnsOptions,
+  GhostOptions,
+  GhostResponse,
+  RequestOptions,
+} from './types.js';
 
 import { GhostBrowser } from './browser.js';
 import { NativeAdapter } from './adapters/native.js';
@@ -23,7 +30,7 @@ const INSTALL_HINT =
 export async function createBrowser(options?: GhostOptions): Promise<GhostBrowser> {
   const binary = await detectCurlImpersonate();
   if (!binary) throw new Error(`[GhostBrowse] curl-impersonate not found in PATH.\n${INSTALL_HINT}`);
-  return new GhostBrowser(options, new CurlAdapter(binary));
+  return new GhostBrowser(options, new CurlAdapter(binary, options?.dns));
 }
 
 /**
@@ -31,7 +38,7 @@ export async function createBrowser(options?: GhostOptions): Promise<GhostBrowse
  * Use only for testing / environments where curl-impersonate can't be installed.
  */
 export function createBrowserNative(options?: GhostOptions): GhostBrowser {
-  return new GhostBrowser(options, new NativeAdapter());
+  return new GhostBrowser(options, new NativeAdapter(options?.dns));
 }
 
 /**

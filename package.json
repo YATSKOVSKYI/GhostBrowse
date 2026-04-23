@@ -1,6 +1,6 @@
 {
   "name": "ghost-browse",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Lightweight browser-impersonating HTTP client for Bun and Node.js",
   "type": "module",
   "repository": {
@@ -31,7 +31,7 @@
     "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "typecheck": "tsc --noEmit",
     "test": "bun run test:unit",
-    "test:unit": "bun test test/smoke.test.ts",
+    "test:unit": "bun test test/smoke.test.ts test/dns.test.ts",
     "test:all": "bun test",
     "test:books": "bun test test/books-to-scrape.test.ts",
     "benchmark:books": "bun test test/books-to-scrape.test.ts",

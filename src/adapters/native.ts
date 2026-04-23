@@ -1,4 +1,5 @@
 import type { Adapter, AdapterResponse } from './types.js';
+import type { GhostBrowseDnsOptions } from '../types.js';
 
 function flattenHeaders(response: Response): Record<string, string> {
   const out: Record<string, string> = {};
@@ -23,6 +24,17 @@ function extractSetCookies(response: Response): string[] {
  * (BoringSSL) but not identical.
  */
 export class NativeAdapter implements Adapter {
+  private static warnedCustomDns = false;
+
+  constructor(dns?: GhostBrowseDnsOptions) {
+    if (dns && !NativeAdapter.warnedCustomDns) {
+      NativeAdapter.warnedCustomDns = true;
+      console.warn(
+        '[GhostBrowse] custom DNS is supported only by the curl adapter; createBrowserNative() ignores dns.',
+      );
+    }
+  }
+
   async request(
     url: string,
     method: string,
