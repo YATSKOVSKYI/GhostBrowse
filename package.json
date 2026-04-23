@@ -1,11 +1,20 @@
 {
-  "name": "ghost-browse",
-  "version": "0.1.0",
+  "name": "ghostbrowse",
+  "version": "0.1.1",
   "description": "Lightweight browser-impersonating HTTP client for Bun and Node.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YATSKOVSKYI/GhostBrowse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YATSKOVSKYI/GhostBrowse/issues"
+  },
+  "homepage": "https://github.com/YATSKOVSKYI/GhostBrowse#readme",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -17,8 +26,8 @@
   "scripts": {
     "clean": "bun -e \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true })\"",
     "build": "bun run clean && bun run build:esm && bun run build:cjs && bun run build:types",
-    "build:esm": "bun build src/index.ts --outdir dist --target node --format esm --sourcemap",
-    "build:cjs": "bun build src/index.ts --outdir dist-cjs --target node --format cjs --sourcemap && bun -e \"import { renameSync, rmSync } from 'node:fs'; renameSync('dist-cjs/index.js', 'dist/index.cjs'); renameSync('dist-cjs/index.js.map', 'dist/index.cjs.map'); rmSync('dist-cjs', { recursive: true, force: true })\"",
+    "build:esm": "bun build src/index.ts --outdir dist --target node --format esm",
+    "build:cjs": "bun build src/index.ts --outdir dist-cjs --target node --format cjs && bun -e \"import { renameSync, rmSync } from 'node:fs'; renameSync('dist-cjs/index.js', 'dist/index.cjs'); rmSync('dist-cjs', { recursive: true, force: true })\"",
     "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "typecheck": "tsc --noEmit",
     "test": "bun run test:unit",

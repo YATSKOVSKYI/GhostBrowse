@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "ghost-browse",
+      "name": "ghostbrowse",
       "devDependencies": {
         "@types/bun": "latest",
         "impit": "^0.13.1",

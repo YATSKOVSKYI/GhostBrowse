@@ -1,0 +1,9 @@
+version: 2
+
+# GhostBrowse is an HTTP client; network access is the package's documented
+# purpose. Keep other Socket.dev alerts inherited from the organization policy.
+issueRules:
+  networkAccess: false
+
+githubApp:
+  enabled: true

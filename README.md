@@ -18,13 +18,13 @@ canvas/WebGL fingerprinting, clicks, or scroll events, use Playwright.
 ## Install
 
 ```sh
-bun add ghost-browse
+bun add ghostbrowse
 ```
 
 or:
 
 ```sh
-npm install ghost-browse
+npm install ghostbrowse
 ```
 
 GhostBrowse does not bundle browser binaries or `curl-impersonate`. The core
@@ -59,7 +59,7 @@ $env:GHOSTBROWSE_CURL_IMPERSONATE = 'C:\tools\curl-impersonate\curl-impersonate-
 ## Usage
 
 ```ts
-import { createBrowser } from 'ghost-browse';
+import { createBrowser } from 'ghostbrowse';
 
 const browser = await createBrowser();
 const response = await browser.get('https://example.com');
@@ -71,7 +71,7 @@ console.log(await response.text());
 Native fallback without `curl-impersonate`:
 
 ```ts
-import { createBrowserNative } from 'ghost-browse';
+import { createBrowserNative } from 'ghostbrowse';
 
 const browser = createBrowserNative();
 const response = await browser.get('https://example.com');
@@ -102,6 +102,25 @@ console.log(await response.json());
   keeping the same public browser API.
 - `createBrowserNative()` uses the runtime's native `fetch` transport.
 
+## Security Notes
+
+GhostBrowse is an HTTP client, so network access is intentional and required.
+Static scanners such as Socket.dev may report `networkAccess` because the native
+adapter calls the runtime `fetch` API. That finding is expected for this package
+and is documented here instead of being hidden through obfuscation.
+
+The package is intentionally small:
+
+- no install, postinstall, or prepare scripts;
+- no telemetry;
+- no runtime dependencies;
+- no bundled browser, Chromium, or `curl-impersonate` binaries;
+- optional TLS impersonation uses only a user-installed binary selected from
+  `GHOSTBROWSE_CURL_IMPERSONATE` or `PATH`.
+
+For deterministic environments, prefer `createBrowserNative()` or pin the
+external `curl-impersonate` binary yourself.
+
 ## Troubleshooting
 
 ### `curl-impersonate not found in PATH`
@@ -122,7 +141,7 @@ $env:GHOSTBROWSE_CURL_IMPERSONATE = 'C:\tools\curl-impersonate\curl-impersonate-
 Verify detection:
 
 ```ts
-import { detectCurlImpersonate } from 'ghost-browse';
+import { detectCurlImpersonate } from 'ghostbrowse';
 
 console.log(await detectCurlImpersonate());
 ```
@@ -131,7 +150,7 @@ If TLS impersonation is not needed for a target site, use the zero-binary
 native transport:
 
 ```ts
-import { createBrowserNative } from 'ghost-browse';
+import { createBrowserNative } from 'ghostbrowse';
 
 const browser = createBrowserNative();
 ```
